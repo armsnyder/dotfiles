@@ -103,7 +103,7 @@ return {
 
       -- Automatically open fuzzy file finder when Neovim starts.
       -- TODO: Only do this if Neovim is opened to a directory.
-      builtin.find_files()
+      -- builtin.find_files()
     end,
   },
 }
