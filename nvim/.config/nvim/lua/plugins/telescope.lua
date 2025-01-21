@@ -100,6 +100,10 @@ return {
       vim.keymap.set("n", "<leader>sn", function()
         builtin.find_files({ cwd = vim.fn.stdpath("config") })
       end, { desc = "[S]earch [N]eovim files" })
+
+      -- Automatically open fuzzy file finder when Neovim starts.
+      -- TODO: Only do this if Neovim is opened to a directory.
+      builtin.find_files()
     end,
   },
 }

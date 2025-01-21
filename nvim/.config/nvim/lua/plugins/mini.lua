@@ -40,6 +40,7 @@ return {
       minifiles.setup({
         options = {
           permanent_delete = false,
+          use_as_default_explorer = false, -- We want to open Telescope instead
         },
       })
       vim.keymap.set("n", "<leader>tf", minifiles.open, { desc = "Open file browser" })
