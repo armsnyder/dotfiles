@@ -43,14 +43,14 @@ return {
           use_as_default_explorer = false, -- We want to open Telescope instead
         },
       })
-      vim.keymap.set("n", "<leader>tf", minifiles.open, { desc = "Open file browser" })
+      vim.keymap.set("n", "<leader>e", minifiles.open, { desc = "Open file [E]xplorer" })
 
-      -- Also map :w to synchronize the prepared filesystem modifications.
       vim.api.nvim_create_autocmd("User", {
         pattern = "MiniFilesBufferCreate",
         callback = function(ev)
           vim.schedule(function()
-            vim.api.nvim_buf_set_option(0, "buftype", "acwrite")
+            -- Also map :w to synchronize the prepared filesystem modifications.
+            vim.api.nvim_set_option_value("buftype", "acwrite", { buf = ev.data.buf_id })
             vim.api.nvim_buf_set_name(0, tostring(vim.api.nvim_get_current_win()))
             vim.api.nvim_create_autocmd("BufWriteCmd", {
               buffer = ev.data.buf_id,
@@ -58,6 +58,11 @@ return {
                 require("mini.files").synchronize()
               end,
             })
+
+            --- Map escape to close the file explorer
+            vim.keymap.set("n", "<Esc>", function()
+              require("mini.files").close()
+            end, { buffer = ev.data.buf_id })
           end)
         end,
       })
