@@ -1,0 +1,21 @@
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+[init]
+	defaultBranch = main
+[core]
+	excludesFile = ~/.gitignore
+[alias]
+	co = checkout
+	st = status
+	save = !git add -A && git commit -qm 'chore: COMMIT SAVEPOINT'
+	undo = reset HEAD~1 --mixed
+	recent = for-each-ref --sort=committerdate refs/heads/
+	wipe = !git add -A && git commit -qm 'chore: WIPE SAVEPOINT' && git reset HEAD~1 --hard
+	amend = commit --amend
+	cp = cherry-pick
+[include]
+	path = ~/.gitconfig.user
+[includeif "gitdir:~/repos/k-id/"]
+	path = ~/repos/k-id/.gitconfig
