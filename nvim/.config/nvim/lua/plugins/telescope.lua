@@ -11,6 +11,7 @@ return {
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
       { "nvim-tree/nvim-web-devicons" }, -- Useful for getting pretty icons, but requires a Nerd Font.
+      { "natecraddock/workspaces.nvim" }, -- Workspace management
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -64,6 +65,7 @@ return {
       -- Enable Telescope extensions if they are installed
       pcall(require("telescope").load_extension, "fzf")
       pcall(require("telescope").load_extension, "ui-select")
+      pcall(require("telescope").load_extension, "workspaces")
 
       -- See `:help telescope.builtin`
       local builtin = require("telescope.builtin")
@@ -71,7 +73,7 @@ return {
       vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
       vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
       vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-      vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
+      vim.keymap.set("n", "<leader>sw", ":Telescope workspaces<cr>", { desc = "[S]earch [W]orkspaces" })
       vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
       vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
       vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
@@ -102,8 +104,23 @@ return {
       end, { desc = "[S]earch [N]eovim files" })
 
       -- Automatically open fuzzy file finder when Neovim starts.
-      -- TODO: Only do this if Neovim is opened to a directory.
-      -- builtin.find_files()
+      require("workspaces").setup({
+        hooks = {
+          open = function()
+            -- Change the LSP workspace
+            local wsdir = require("workspaces").path()
+            vim.lsp.buf.add_workspace_folder(wsdir)
+            for _, value in ipairs(vim.lsp.buf.list_workspace_folders()) do
+              if value ~= wsdir then
+                vim.lsp.buf.remove_workspace_folder(value)
+              end
+            end
+
+            -- Open the fuzzy file finder automatically
+            builtin.find_files()
+          end,
+        },
+      })
     end,
   },
 }
