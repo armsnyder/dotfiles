@@ -11,7 +11,7 @@
 	st = status
 	save = !git add -A && git commit -qm 'chore: COMMIT SAVEPOINT'
 	undo = reset HEAD~1 --mixed
-	recent = for-each-ref --sort=committerdate refs/heads/
+	recent = branch --sort=-committerdate --format='%(refname:short)'
 	wipe = !git add -A && git commit -qm 'chore: WIPE SAVEPOINT' && git reset HEAD~1 --hard
 	amend = commit --amend
 	cp = cherry-pick
@@ -19,3 +19,11 @@
 	path = ~/.gitconfig.user
 [includeif "gitdir:~/repos/k-id/"]
 	path = ~/repos/k-id/.gitconfig
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[user]
+	name = Adam Snyder
+	email = armsnyder@gmail.com

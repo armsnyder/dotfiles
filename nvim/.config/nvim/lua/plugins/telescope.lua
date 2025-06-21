@@ -12,6 +12,7 @@ return {
       { "nvim-telescope/telescope-ui-select.nvim" },
       { "nvim-tree/nvim-web-devicons" }, -- Useful for getting pretty icons, but requires a Nerd Font.
       { "natecraddock/workspaces.nvim" }, -- Workspace management
+      { "cuducos/yaml.nvim" }, -- Search YAML
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -73,12 +74,13 @@ return {
       vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
       vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
       vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-      vim.keymap.set("n", "<leader>sw", ":Telescope workspaces<cr>", { desc = "[S]earch [W]orkspaces" })
+      vim.keymap.set("n", "<leader>sw", "<cmd>Telescope workspaces<cr>", { desc = "[S]earch [W]orkspaces" })
       vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
       vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
       vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
       vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+      vim.keymap.set("n", "<leader>sj", require("yaml_nvim").telescope, { desc = "[S]earch [J]SON" })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set("n", "<leader>/", function()
@@ -114,6 +116,11 @@ return {
               if value ~= wsdir then
                 vim.lsp.buf.remove_workspace_folder(value)
               end
+            end
+
+            -- Trying to mitigate an issue where multiple Copilot instances are started.
+            for _, client in ipairs(vim.lsp.get_clients()) do
+              client.stop()
             end
 
             -- Open the fuzzy file finder automatically

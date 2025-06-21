@@ -32,8 +32,6 @@ return {
         return "%2l:%-2v"
       end
 
-      require("mini.pairs").setup()
-
       require("mini.comment").setup()
 
       local minifiles = require("mini.files")

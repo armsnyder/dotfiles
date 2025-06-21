@@ -6,16 +6,18 @@ return {
     main = "nvim-treesitter.configs", -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     config = function()
-      require("nvim-treesitter").setup({
+      require("nvim-treesitter.configs").setup({
         ensure_installed = {
           "bash",
           "c",
           "diff",
           "html",
+          "jsonnet",
           "lua",
           "luadoc",
           "markdown",
           "markdown_inline",
+          "gotmpl",
           "query",
           "vim",
           "vimdoc",
@@ -30,9 +32,6 @@ return {
           additional_vim_regex_highlighting = { "ruby" },
         },
         indent = { enable = true, disable = { "ruby" } },
-      })
-
-      require("nvim-treesitter.configs").setup({
         textobjects = {
           -- TODO: Configure
         },

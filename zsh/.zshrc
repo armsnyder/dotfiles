@@ -1,3 +1,5 @@
+fpath=(~/.zsh/completions $fpath)
+
 # Start configuration added by Zim install {{{
 #
 # User configuration sourced by interactive shells
@@ -128,22 +130,33 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+
+if [ -f /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# Register AWS CLI bash completion
+if [ -f /usr/local/bin/aws_completer ]; then
+  # Enable bash-style completions (required by AWS CLI)
+  autoload -Uz bashcompinit
+  bashcompinit
+  complete -C '/usr/local/bin/aws_completer' aws
+fi
 
 # Vim
 alias vi=nvim
 export EDITOR=nvim
 
 # Zoxide
-eval "$(zoxide init zsh)"
-alias cd=z
-
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init zsh)"
+  alias cd=z
+fi
 
 # Kubectl
 if command -v kubectl &>/dev/null; then
   alias k=kubectl
-  compdef __start_kubectl k
-  source <(kubectl completion zsh)
+  compdef k=kubectl
   export KUBE_EDITOR=nvim
 fi
 
@@ -170,3 +183,30 @@ bindkey '^[[B' down-line-or-beginning-search
 
 # History
 setopt histignorespace
+
+# istioctl
+export PATH=$HOME/.istioctl/bin:$PATH
+
+# krewctl kubectl plugin manager
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# Postgres
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# tk
+if command -v tk &>/dev/null; then
+  complete -o nospace -C /opt/homebrew/bin/tk tk
+fi
+
+# Mise
+if command -v mise &>/dev/null; then
+  eval "$(mise activate zsh)"
+fi
