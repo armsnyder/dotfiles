@@ -210,3 +210,6 @@ fi
 if command -v mise &>/dev/null; then
   eval "$(mise activate zsh)"
 fi
+
+# For nvr
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
