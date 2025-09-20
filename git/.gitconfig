@@ -27,3 +27,10 @@
 [user]
 	name = Adam Snyder
 	email = armsnyder@gmail.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHEk/T9DJECmLk68Zg4MaToJPRe+3vlCKTQghBUnUpbT
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true
