@@ -8,6 +8,9 @@ return {
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
+        cond = function()
+          return vim.fn.executable("make") == 1
+        end,
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
       { "nvim-tree/nvim-web-devicons" }, -- Useful for getting pretty icons, but requires a Nerd Font.
