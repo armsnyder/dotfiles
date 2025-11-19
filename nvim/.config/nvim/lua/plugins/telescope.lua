@@ -1,3 +1,54 @@
+local live_multigrep = function(opts)
+  opts = opts or {}
+  opts.cwd = opts.cwd or vim.loop.cwd()
+
+  local finder = require("telescope.finders").new_async_job({
+    command_generator = function(prompt)
+      if not prompt or prompt == "" then
+        return nil
+      end
+
+      local pieces = vim.split(prompt, "  ")
+      local args = { "rg" }
+
+      if pieces[1] then
+        table.insert(args, "-e")
+        table.insert(args, pieces[1])
+      end
+
+      if pieces[2] then
+        table.insert(args, "-g")
+        table.insert(args, pieces[2])
+      end
+
+      for _, v in ipairs({
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--smart-case",
+      }) do
+        table.insert(args, v)
+      end
+
+      return args
+    end,
+    entry_maker = require("telescope.make_entry").gen_from_vimgrep(opts),
+    cwd = opts.cwd,
+  })
+
+  require("telescope.pickers")
+    .new(opts, {
+      prompt_title = "Multi Grep",
+      finder = finder,
+      debounce = 100,
+      previewer = require("telescope.config").values.grep_previewer(opts),
+      sorter = require("telescope.sorters").empty(),
+    })
+    :find()
+end
+
 return {
   { -- Fuzzy Finder (files, lsp, etc)
     "nvim-telescope/telescope.nvim",
@@ -14,7 +65,6 @@ return {
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
       { "nvim-tree/nvim-web-devicons" }, -- Useful for getting pretty icons, but requires a Nerd Font.
-      { "cuducos/yaml.nvim" }, -- Search YAML
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -75,12 +125,11 @@ return {
       vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
       vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
       vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-      vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
+      vim.keymap.set("n", "<leader>sg", live_multigrep, { desc = "[S]earch by [G]rep" })
       vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
       vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
       vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
-      vim.keymap.set("n", "<leader>sj", require("yaml_nvim").telescope, { desc = "[S]earch [J]SON" })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set("n", "<leader>/", function()
