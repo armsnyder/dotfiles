@@ -213,3 +213,11 @@ fi
 
 # For nvr
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+
+# Rust
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/tk tk
