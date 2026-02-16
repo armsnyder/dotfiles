@@ -64,4 +64,4 @@ vim.opt.scrolloff = 5
 vim.opt.termguicolors = true -- Full colors, for themes
 
 vim.opt.colorcolumn = "80" -- Highlight column 80
-vim.opt.textwidth = 80 -- Wrap text at column 80
+-- vim.opt.textwidth = 80 -- Wrap text at column 80 (disabled to prevent auto-wrapping)
