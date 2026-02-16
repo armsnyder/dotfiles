@@ -54,7 +54,6 @@ return {
           vim.schedule(function()
             -- Also map :w to synchronize the prepared filesystem modifications.
             vim.api.nvim_set_option_value("buftype", "acwrite", { buf = ev.data.buf_id })
-            vim.api.nvim_buf_set_name(0, tostring(vim.api.nvim_get_current_win()))
             vim.api.nvim_create_autocmd("BufWriteCmd", {
               buffer = ev.data.buf_id,
               callback = function()
