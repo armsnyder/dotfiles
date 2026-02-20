@@ -233,6 +233,7 @@ return {
                   ignore = { "E402" },
                 }, -- Disable pycodestyle formatting checks
                 yapf = { enabled = false }, -- Disable yapf formatter
+                autopep8 = { enabled = false }, -- Disable autopep8 formatter
               },
             },
           },
