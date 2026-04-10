@@ -18,7 +18,7 @@ _tmux_switch() {
 _ide_layout() {
   local target="$1" dir="$2"
   tmux send-keys -t "$target" "nvim" Enter
-  tmux split-window -h -t "$target" -c "$dir"
+  tmux split-window -h -l 40% -t "$target" -c "$dir"
   tmux send-keys -t "$target" "agent --approve-mcps" Enter
   tmux split-window -v -f -l 25% -t "$target" -c "$dir"
   tmux select-pane -t "${target}.0"
